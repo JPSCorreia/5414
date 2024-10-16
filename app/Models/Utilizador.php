@@ -7,14 +7,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+class Utilizador extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    // defines the table name
+    // Define o nome da tabela associada ao modelo
     protected $table = 'utilizadores';
 
-    // defines the timestamps, por defeito o php usa o nome em ingles em vez de portugues.
+    // Definir os timestamps personalizados
     const CREATED_AT = 'criado_em';
     const UPDATED_AT = 'actualizado_em';
 
