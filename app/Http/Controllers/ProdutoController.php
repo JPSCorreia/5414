@@ -25,7 +25,7 @@ class ProdutoController extends Controller
         }
 
         Log::info('A tentar retornar os produtos como HTML');
-        return view('products.index', ['produtos' => $produtos]);
+        return view('produtos.index', ['produtos' => $produtos]);
     }
 
     // Mostrar um produto específico
@@ -119,6 +119,14 @@ class ProdutoController extends Controller
         }
 
         Log::info('A tentar eliminar o produto com ID: ' . $id);
+
+        // Verifica se o produto tem imagens associadas
+        if ($produto->imagens()->count() > 0) {
+            Log::warning('Não foi eliminado o produto porque existem imagens associadas a ele');
+            return response()->json([
+                'message' => 'Não foi possível eliminar o produto porque existem imagens associadas a ele.'
+            ], 400);
+        }
 
         if ($produto->delete()) {
             Log::info('Produto eliminado com sucesso: ' . $id);

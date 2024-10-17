@@ -4,7 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UtilizadorController;
 use App\Http\Controllers\ProdutoController;
-use App\Http\Controllers\ImagemProdutoController;
+use App\Http\Controllers\ImagemController;
 use App\Http\Controllers\CategoriaController;
 
 Route::get('/user', function (Request $request) {
@@ -39,6 +39,8 @@ Route::delete('/produtos/{id}', [ProdutoController::class, 'destroy']);
 // GET /categorias
 Route::get('/categorias', [CategoriaController::class, 'index']);
 // GET /categorias/{id}
+Route::get('/categorias/{id}', [CategoriaController::class, 'show']);
+// POST /categorias
 Route::post('/categorias', [CategoriaController::class, 'store']);
 // PUT /categorias/{id}
 Route::put('/categorias/{id}', [CategoriaController::class, 'update']);
@@ -47,10 +49,12 @@ Route::delete('/categorias/{id}', [CategoriaController::class, 'destroy']);
 
 // Imagens de um produto
 // GET /produtos/{produto_id}/imagens
-Route::get('/produtos/{produto_id}/imagens', [ImagemProdutoController::class, 'index']);
+Route::get('/imagens/produtos/{produto_id}', [ImagemController::class, 'index']);
+// GET /imagens/{id}
+Route::get('/imagens/{id}', [ImagemController::class, 'show']);
 // POST /produtos/{produto_id}/imagens
-Route::post('/produtos/{produto_id}/imagens', [ImagemProdutoController::class, 'store']);
+Route::post('/imagens/produtos/{produto_id}', [ImagemController::class, 'store']);
 // PUT /produtos/{id}/imagens/{id}
-Route::put('/imagens/{id}', [ImagemProdutoController::class, 'update']);
+Route::put('/imagens/{id}', [ImagemController::class, 'update']);
 // DELETE /produtos/{id}/imagens/{id}
-Route::delete('/imagens/{id}', [ImagemProdutoController::class, 'destroy']);
+Route::delete('/imagens/{id}', [ImagemController::class, 'destroy']);

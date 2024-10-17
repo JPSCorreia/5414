@@ -26,7 +26,8 @@ class UtilizadorController extends Controller
         }
 
         Log::info('A tentar retornar os utilizadores como HTML');
-        return view('users.index', ['utilizadores' => $utilizadores]);
+
+        return view('utilizadores.index', ['utilizadores' => $utilizadores]);
 
         // Alternativa:
         // return view('users.index', compact('utilizadores'));
@@ -46,6 +47,7 @@ class UtilizadorController extends Controller
         }
 
         Log::info('Utilizador encontrado: ' . $id);
+        
         return response()->json($utilizador);
     }
 

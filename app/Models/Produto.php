@@ -33,6 +33,6 @@ class Produto extends Model
     // Relacionamento com imagens (Um produto tem muitas imagens)
     public function imagens()
     {
-        return $this->hasMany(ImagemProduto::class, 'produto_id');
+        return $this->hasMany(Imagem::class, 'produto_id');
     }
 }

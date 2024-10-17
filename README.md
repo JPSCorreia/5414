@@ -1,3 +1,5 @@
+# Briefing Projeto 5414 - PHP
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">
@@ -7,61 +9,42 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## About Laravel
+Pretende-se a construção de um sistema de gestão de conteúdos, vulgo backend, baseado em PHP/MySQL que permita:
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Autenticação de utilizadores
+- Gestão de perfil de utilizador individual, exceto email em cada conta criada
+- Gestão de perfis de utilizadores por parte do administrador
+- Registo de utilizadores manual pelo administrador
+- Registo de utilizadores pelo próprio, garantindo a não duplicação de registos
+- Utilizadores, no registo, devem selecionar (Distrito, Concelho)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Gestão de Categorias
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Criação, edição e eliminação das mesmas
+- Mostrar quantidade de itens por categoria
 
-## Learning Laravel
+## Gestão de Produtos
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- Criação, edição e eliminação das mesmas
+- Produtos devem ter:
+  - Preços
+  - Imagem(s)
+  - Título
+  - Descrição
+  - Categoria
+- Na edição de produto, garantir que a imagem não é perdida em caso de update e que é substituída quando se faz update com nova imagem
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## Funcionalidades do Administrador
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- Visualizar totais de utilizadores por distrito e também por concelho
+- Saber data de último acesso de cada conta
 
-## Laravel Sponsors
+## Extra
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- Ecrãs de frontend com montra de "loja" apresentando os produtos, visitáveis por categoria
+- Permitir "encomenda" de cada item e, neste caso, mostrar no BackOffice as respetivas encomendas com data, utilizador e produto(s)
 
-### Premium Partners
+### Entrega
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-# 5414
+- Entrega em ZIP com o SQL utilizado
+  
