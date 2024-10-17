@@ -2,22 +2,37 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UtilizadorController;
+use App\Http\Controllers\ProdutoController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\CategoriaController;
+use App\Http\Controllers\AuthController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
-Route::get('/utilizadores', [UtilizadorController::class, 'index']);
+Route::get('/', [HomeController::class, 'index']); // Homepage
 
-// // Utilizadores
-// // GET /utilizadores
-// Route::get('/utilizadores', [UtilizadorController::class, 'index']);
+Route::get('/utilizadores', [UtilizadorController::class, 'index']); // Lista todos os utilizadores
 
-// // GET /utilizadores/{id}
-// Route::get('/utilizadores/{id}', [UtilizadorController::class, 'show']);
+Route::get('produtos', [ProdutoController::class, 'index']); // Lista todos os produtos
 
-// // POST /utilizadores
-// Route::post('/utilizadores', [UtilizadorController::class, 'store']);
+Route::get('/categorias', [CategoriaController::class, 'index']); // Lista todas as categorias
+
+Route::get('/categorias/{id}', [CategoriaController::class, 'show']); // Mostra os produtos de uma categoria específica
+
+Route::get('/register', [AuthController::class, 'showRegisterForm']); // Formulário de registo
+
+Route::post('/register', [AuthController::class, 'register']); // Registo
+
+Route::get('/login', [AuthController::class, 'showLoginForm']); // Formulário de login
+
+Route::post('/login', [AuthController::class, 'login']); // Login
+
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth'); // Logout
+
+Route::get('/perfil', function () {
+    return view('perfil');
+})->middleware('auth');
+
+
 
 // Get CSRF Token
 // Route::get('/csrf-token', function () {

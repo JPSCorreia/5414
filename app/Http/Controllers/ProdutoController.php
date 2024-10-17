@@ -25,7 +25,7 @@ class ProdutoController extends Controller
         }
 
         Log::info('A tentar retornar os produtos como HTML');
-        return view('produtos.index', ['produtos' => $produtos]);
+        return view('produtos/index', ['produtos' => $produtos]);
     }
 
     // Mostrar um produto específico

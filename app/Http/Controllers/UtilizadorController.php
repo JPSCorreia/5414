@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Utilizador;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-
 use Illuminate\Support\Facades\Log;
 
 class UtilizadorController extends Controller
@@ -73,12 +73,21 @@ class UtilizadorController extends Controller
             'password' => Hash::make($request->password), // Encriptar a password
             'distrito' => $request->distrito,
             'concelho' => $request->concelho,
-            'admin' => $request->admin ?? 0, // O valor default será 0 (não administrador)
+            'admin' => $request->admin ?? 1, // O valor default será 1 (administrador)
         ]);
 
         Log::info('Utilizador criado com sucesso: ' . $request->email);
     
-        return response()->json($utilizador, 201);
+        if (request()->wantsJson()) {
+            return response()->json($utilizador, 201);
+        }
+        
+        // Fazer login automaticamente após o registo
+        Auth::login($utilizador);
+
+        Log::info('Autenticado com sucesso: ' . $request->email);
+
+        return redirect('/perfil')->with('success', 'Registo concluído com sucesso!');
     }
 
     // Atualizar utilizador existente
@@ -104,16 +113,23 @@ class UtilizadorController extends Controller
 
         Log::info('Dados validados com sucesso, a tentar actualizar...');
 
-        $utilizador->update([
-            'nome' => $request->nome,
-            'password' => Hash::make($request->password), // Encriptar a password
-            'distrito' => $request->distrito,
-            'concelho' => $request->concelho,
-        ]);
+        $utilizador->nome = $request->nome;
+        $utilizador->distrito = $request->distrito;
+        $utilizador->concelho = $request->concelho;
+    
+        if ($request->filled('password')) {
+            $utilizador->password = Hash::make($request->password);
+        }
+    
+        $utilizador->save();
 
         Log::info('Utilizador atualizado com sucesso: ' . $utilizador->id);
 
-        return response()->json($utilizador, 200);
+        if (request()->wantsJson()) {
+            return response()->json($utilizador, 200);
+        }
+
+        return back()->with('success', 'Utilizador atualizado com sucesso!');
     }
 
     // Eliminar utilizador existente

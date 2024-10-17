@@ -18,11 +18,6 @@ class Utilizador extends Authenticatable
     const CREATED_AT = 'criado_em';
     const UPDATED_AT = 'actualizado_em';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'nome',
         'email',
@@ -30,5 +25,9 @@ class Utilizador extends Authenticatable
         'distrito',
         'concelho',
         'admin'
+    ];
+
+    protected $hidden = [
+        'password', 'remember_token',
     ];
 }

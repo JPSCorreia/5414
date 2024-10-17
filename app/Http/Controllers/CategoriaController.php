@@ -44,7 +44,11 @@ class CategoriaController extends Controller
 
         Log::info('Categoria encontrada: ' . $id);
 
-        return response()->json($categoria);
+        if (request()->wantsJson()) {
+            return response()->json($categoria);
+        }
+
+        return view('categorias.show', ['categoria' => $categoria]);
     }
 
     // Criar nova categoria
