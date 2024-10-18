@@ -1,16 +1,17 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UtilizadorController;
 use App\Http\Controllers\ProdutoController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AdministradorController;
+use App\Http\Controllers\PerfilController;
 
 
 Route::get('/', [HomeController::class, 'index']); // Homepage
 
-Route::get('/utilizadores', [UtilizadorController::class, 'index']); // Lista todos os utilizadores
+Route::get('/administrador', [AdministradorController::class, 'index'])->middleware('auth'); // Lista todos os utilizadores
 
 Route::get('produtos', [ProdutoController::class, 'index']); // Lista todos os produtos
 
@@ -27,6 +28,16 @@ Route::get('/login', [AuthController::class, 'showLoginForm']); // Formulário 
 Route::post('/login', [AuthController::class, 'login']); // Login
 
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth'); // Logout
+
+Route::put('/utilizadores/{id}/editar', [AdministradorController::class, 'update'])->middleware('auth'); // Editar utilizador
+
+Route::put('/perfil/actualizar', [PerfilController::class, 'actualizar']); // Actualizar perfil
+
+Route::post('/administrador/create', [AdministradorController::class, 'create']); // Cria um novo utilizador
+
+Route::delete('/administrador/{id}/delete', [AdministradorController::class, 'destroy']); // Elimina um utilizador
+
+Route::put('/perfil/alterar_password', [PerfilController::class, 'alterarPassword']); // Alterar password
 
 Route::get('/perfil', function () {
     return view('perfil');

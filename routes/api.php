@@ -6,6 +6,7 @@ use App\Http\Controllers\UtilizadorController;
 use App\Http\Controllers\ProdutoController;
 use App\Http\Controllers\ImagemController;
 use App\Http\Controllers\CategoriaController;
+use App\Http\Controllers\AuthController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -17,7 +18,7 @@ Route::get('/utilizadores', [UtilizadorController::class, 'index']);
 // GET /utilizadores/{id}
 Route::get('/utilizadores/{id}', [UtilizadorController::class, 'show']);
 // POST /utilizadores
-Route::post('/utilizadores', [UtilizadorController::class, 'store']);
+Route::post('/register', [AuthController::class, 'store']);
 // PUT /utilizadores/{id}
 Route::put('/utilizadores/{id}', [UtilizadorController::class, 'update']);
 // DELETE /utilizadores/{id}

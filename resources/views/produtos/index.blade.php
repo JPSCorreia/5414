@@ -3,7 +3,8 @@
 @section('title', 'Produtos')
 
 @section('content')
-    <h1 class="text-center">Produtos</h1>
+    <h1 class="text-center">Produtos Disponíveis</h1>
+    <h2>Produtos</h2>
     <div class="row">
         @foreach($produtos as $produto)
             <div class="col-md-3">

@@ -18,13 +18,18 @@ class Utilizador extends Authenticatable
     const CREATED_AT = 'criado_em';
     const UPDATED_AT = 'actualizado_em';
 
+    protected $casts = [
+        'ultimo_login' => 'datetime',
+    ];
+
     protected $fillable = [
         'nome',
         'email',
         'password',
         'distrito',
         'concelho',
-        'admin'
+        'admin',
+        'ultimo_login',
     ];
 
     protected $hidden = [
