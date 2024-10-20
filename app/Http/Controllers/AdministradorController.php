@@ -10,13 +10,28 @@ use Illuminate\Support\Facades\Log;
 class AdministradorController extends Controller
 {
     // Listar pagina de administrador
-    public function index()
+    public function index(Request $request)
     {
+        $query = Utilizador::query();
 
-        $utilizadores = Utilizador::all();
+        // Filtrar por distrito
+        if ($request->filled('distrito')) {
+            $query->where('distrito', $request->distrito);
+        }
 
-        return view('administrador.index', ['utilizadores' => $utilizadores]);
+        // Filtrar por concelho
+        if ($request->filled('concelho')) {
+            $query->where('concelho', $request->concelho);
+        }
 
+        // Obter utilizadores filtrados
+        $utilizadores = $query->get();
+
+        // Obter listas únicas de distritos e concelhos para os filtros
+        $distritos = Utilizador::select('distrito')->distinct()->pluck('distrito');
+        $concelhos = Utilizador::select('concelho')->distinct()->pluck('concelho');
+
+        return view('administrador.index', compact('utilizadores', 'distritos', 'concelhos'));
     }
 
     public function update(Request $request, $id)

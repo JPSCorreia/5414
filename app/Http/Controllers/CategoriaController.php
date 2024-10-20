@@ -68,8 +68,9 @@ class CategoriaController extends Controller
 
         Log::info('Categoria criada com sucesso: ' . $request->nome);
 
-        return response()->json($categoria, 201);
+        return response()->json(['success' => true, 'categoria' => $categoria], 201);
     }
+
 
     // Atualizar categoria existente
     public function update(Request $request, $id)
@@ -91,8 +92,9 @@ class CategoriaController extends Controller
 
         Log::info('Categoria atualizada com sucesso: ' . $request->nome);
 
-        return response()->json($categoria);
+        return response()->json(['success' => true, 'categoria' => $categoria], 200);
     }
+
 
     // Eliminar categoria
     public function destroy($id)
@@ -120,11 +122,17 @@ class CategoriaController extends Controller
         if ($categoria->delete()) {
             Log::info('Categoria eliminada com sucesso: ' . $id);
 
-            return response()->json(['message' => 'Categoria eliminada com sucesso']);
+            return response()->json(['success' => true], 200);
         }
 
         Log::error('Ocorreu um erro ao eliminar a categoria');
-        
+
         return response()->json(['message' => 'Ocorreu um erro ao eliminar a categoria'], 500);
     }
+
+
+
+
+
+
 }

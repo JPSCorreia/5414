@@ -39,6 +39,13 @@ Route::delete('/administrador/{id}/delete', [AdministradorController::class, 'de
 
 Route::put('/perfil/alterar_password', [PerfilController::class, 'alterarPassword']); // Alterar password
 
+Route::post('/categorias/store', [CategoriaController::class, 'store']); // Cria uma nova categoria
+
+Route::post('/categorias/{id}/update', [CategoriaController::class, 'update']); // Edita uma categoria
+
+Route::delete('/categorias/{id}/destroy', [CategoriaController::class, 'destroy']); // Elimina uma categoria
+
+
 Route::get('/perfil', function () {
     return view('perfil');
 })->middleware('auth');

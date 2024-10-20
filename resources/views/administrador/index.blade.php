@@ -5,6 +5,40 @@
 @section('content')
     <h3 class="text-center">Gestão de Utilizadores</h3>
 
+    <!-- Filtros -->
+    <div class="container mt-4">
+        <form action="{{ url('/administrador') }}" method="GET" class="row g-3">
+            <div class="col-md-4">
+                <label for="filter-distrito" class="form-label">Distrito</label>
+                <select name="distrito" id="filter-distrito" class="form-select">
+                    <option value="">Todos os Distritos</option>
+                    @foreach($distritos as $distrito)
+                        <option value="{{ $distrito }}" {{ request('distrito') == $distrito ? 'selected' : '' }}>
+                            {{ $distrito }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="col-md-4">
+                <label for="filter-concelho" class="form-label">Concelho</label>
+                <select name="concelho" id="filter-concelho" class="form-select">
+                    <option value="">Todos os Concelhos</option>
+                    @foreach($concelhos as $concelho)
+                        <option value="{{ $concelho }}" {{ request('concelho') == $concelho ? 'selected' : '' }}>
+                            {{ $concelho }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="col-md-2 align-self-end">
+                <button type="submit" class="btn btn-primary">Filtrar</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Tabela de Utilizadores -->
     <div class="container mt-4">
         <table class="table table-striped">
             <thead>
@@ -17,6 +51,7 @@
                     <th>Ultimo Login</th>
                     <th>Criado Em</th>
                     <th>Actualizado Em</th>
+                    <th>Ações</th>
                 </tr>
             </thead>
             <tbody>
@@ -33,8 +68,6 @@
                         <td>
                             <!-- Botão para abrir o modal de edição -->
                             <button class="btn btn-sm btn-warning" onclick="showEditModal({{ $utilizador->id }})">Editar</button>
-                        </td>
-                        <td>
                             <!-- Botão para apagar o utilizador -->
                             <button class="btn btn-sm btn-danger" onclick="deleteUser({{ $utilizador->id }})">Apagar</button>
                         </td>
