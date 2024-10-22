@@ -15,7 +15,11 @@
                         <div class="card-body">
                             <h5 class="card-title">{{ $produto->titulo }}</h5>
                             <p class="card-text">{{ $produto->descricao }}</p>
-                            <img src="{{ $produto->imagens->first()->URL_imagem ?? 'default-image.jpg' }}" class="card-img-top" alt="{{ $produto->titulo }} placeholder image">
+                            <img src="{{ asset('storage/' . $produto->imagens->first()->URL_imagem) }}" 
+                            class="card-img-top" 
+                            alt="{{ $produto->titulo }} imagem placeholder" 
+                            width="100" 
+                            height="100">
                             <p class="card-text"><strong>Preço: </strong>{{ $produto->preco }}€</p>
                         </div>
                     </div>

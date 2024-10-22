@@ -18,7 +18,7 @@
 <body>
 
 <div class="container mt-4">
-    <h1>Montra de Loja</h1>
+    <h1>Bem vindo a nossa loja </h1>
     
     <!-- Carousel -->
     <div id="montraCarousel" class="carousel slide" data-ride="carousel">
@@ -45,12 +45,6 @@
                                             height="200">
                                         <p class="card-text"><strong>Preço: </strong>{{ number_format($produto->preco, 2, ',', '.') }}€</p>
                                         
-                                        @auth
-                                            <form action="{{ route('comprar', $produto->id) }}" method="POST">
-                                                @csrf
-                                                <button type="submit" class="btn btn-primary">Comprar</button>
-                                            </form>
-                                        @endauth
                                     </div>
                                 </div>
                             </div>

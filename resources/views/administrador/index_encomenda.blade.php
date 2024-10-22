@@ -34,7 +34,7 @@
                         </ul>
                     </td>
                     <td>
-                    <a href="{{ route('administrador.encomendas.edit', $encomenda->id) }}" class="btn btn-primary">Editar</a>
+                        <a href="{{ route('administrador.encomendas.edit', $encomenda->id) }}" class="btn btn-primary">Editar</a>
                     </td>
                 </tr>
             @endforeach

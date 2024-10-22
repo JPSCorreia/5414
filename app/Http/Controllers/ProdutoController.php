@@ -1,9 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\Storage;
 
 use App\Models\Produto;
 use Illuminate\Http\Request;
+use App\Models\Categoria;
 
 use Illuminate\Support\Facades\Log;
 
@@ -48,62 +50,105 @@ class ProdutoController extends Controller
     public function store(Request $request)
     {
         Log::info('A tentar criar um novo produto, a validar dados enviados no request: ', $request->all());
-
+    
         $request->validate([
             'titulo' => 'required|string|max:255',
             'descricao' => 'required|string',
             'preco' => 'required|numeric',
             'categoria_id' => 'required|exists:categorias,id', // Verifica que a categoria existe
+            'imagem' => 'nullable|image|mimes:jpg,png,jpeg|max:2048', // Adiciona a validação da imagem
         ]);
-
+    
         Log::info('Dados validados com sucesso, a tentar criar novo produto...');
-
+    
         $produto = Produto::create([
             'titulo' => $request->titulo,
             'descricao' => $request->descricao,
             'preco' => $request->preco,
             'categoria_id' => $request->categoria_id,
         ]);
-
+    
+        // Verifica se existe uma imagem
+        if ($request->hasFile('imagem')) {
+            // Guarda a imagem no disco público
+            $imagemPath = $request->file('imagem')->store('imagens_produtos', 'public');
+            
+            // Cria a entrada na tabela imagens_produto
+            $produto->imagens()->create([
+                'URL_imagem' => $imagemPath,
+            ]);
+        }
+    
         Log::info('Produto criado com sucesso: ' . $request->titulo);
-
+    
         return response()->json($produto, 201);
     }
-
-    // Atualizar produto existente
+    
     public function update(Request $request, $id)
     {
         Log::info('A tentar atualizar o produto com ID: ' . $id);
-
+    
         $produto = Produto::find($id);
-
+    
         if (!$produto) {
             Log::error('Produto com ID ' . $id . ' não encontrado');
             return response()->json(['message' => 'Produto não encontrado'], 404);
         }
-
+    
         Log::info('A tentar validar dados enviados no request: ', $request->all());
-
+    
         $request->validate([
             'titulo' => 'sometimes|string|max:255',
             'descricao' => 'sometimes|string',
             'preco' => 'sometimes|numeric',
             'categoria_id' => 'sometimes|exists:categorias,id',
+            'imagem' => 'nullable|image|mimes:jpg,png,jpeg|max:2048', // Adiciona a validação da imagem
         ]);
-
+    
         Log::info('Dados validados com sucesso, a tentar atualizar...');
-
+    
         $produto->update([
             'titulo' => $request->titulo,
             'descricao' => $request->descricao,
             'preco' => $request->preco,
             'categoria_id' => $request->categoria_id,
         ]);
-
+    
+        // Verifica se existe uma nova imagem
+        if ($request->hasFile('imagem')) {
+            // Apaga a imagem antiga, se existir
+            $produto->imagens()->each(function ($imagem) {
+                Storage::disk('public')->delete($imagem->URL_imagem);
+                $imagem->delete(); // Apaga a entrada na tabela imagens_produto
+            });
+    
+            // Guarda a nova imagem
+            $imagemPath = $request->file('imagem')->store('imagens_produtos', 'public');
+    
+            // Cria a nova entrada na tabela imagens_produto
+            $produto->imagens()->create([
+                'URL_imagem' => $imagemPath,
+            ]);
+        }
+    
         Log::info('Produto atualizado com sucesso: ' . $id);
-
+    
         return response()->json($produto);
     }
+
+    public function create()
+    {
+        $categorias = Categoria::all(); // Assume que já tens um modelo Categoria
+        return view('produtos.create', compact('categorias'));
+    }
+
+    public function edit($id)
+    {
+        $produto = Produto::find($id);
+        $categorias = Categoria::all(); // Assume que já tens um modelo Categoria
+        return view('produtos.edit', compact('produto', 'categorias'));
+    }
+
 
     // Eliminar produto existente
     public function destroy($id)

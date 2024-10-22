@@ -7,27 +7,36 @@
 
     <!-- Secção de categorias -->
     <h2>Categorias</h2>
-
-    <!-- Botão para abrir o modal de criação de nova categoria -->
-    <div class="mb-4 text-end">
-        <button class="btn btn-success" onclick="showCreateCategoryModal()">Nova Categoria</button>
-    </div>
-
-    <div class="row">
-        @foreach($categorias as $categoria)
-            <div class="col-md-3" id="categoria-{{ $categoria->id }}">
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ $categoria->nome }}</h5>
-                        <a href="/categorias/{{ $categoria->id }}" class="btn btn-primary">Ver Produtos</a>
-                        <!-- Botões de editar e eliminar -->
-                        <button class="btn btn-sm btn-warning mt-2" onclick="showEditCategoryModal({{ $categoria->id }}, '{{ $categoria->nome }}')">Editar</button>
-                        <button class="btn btn-sm btn-danger mt-2" onclick="deleteCategory({{ $categoria->id }})">Eliminar</button>
-                    </div>
-                </div>
+    @auth
+        @if(Auth::user()->admin)
+            <!-- Botão para abrir o modal de criação de nova categoria -->
+            <div class="mb-4 text-end">
+                <button class="btn btn-success" onclick="showCreateCategoryModal()">Nova Categoria</button>
+                <button class="btn btn-primary" onclick="window.location.href='{{ route('produtos.index') }}'">Listar Produtos</button>
             </div>
-        @endforeach
-    </div>
+        @endif
+    @endauth
+
+            <div class="row">
+                @foreach($categorias as $categoria)
+                    <div class="col-md-3" id="categoria-{{ $categoria->id }}">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ $categoria->nome }}</h5>
+                                <a href="/categorias/{{ $categoria->id }}" class="btn btn-primary">Ver Produtos</a>
+                                @auth
+                                    @if(Auth::user()->admin)
+                                <!-- Botões de editar e eliminar -->
+                                        <button class="btn btn-sm btn-warning mt-2" onclick="showEditCategoryModal({{ $categoria->id }}, '{{ $categoria->nome }}')">Editar</button>
+                                        <button class="btn btn-sm btn-danger mt-2" onclick="deleteCategory({{ $categoria->id }})">Eliminar</button>
+                                    @endif
+                                @endauth
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        
 
     <!-- Modal para criar nova categoria -->
     <div class="modal fade" id="createCategoryModal" tabindex="-1" aria-labelledby="createCategoryModalLabel" aria-hidden="true">

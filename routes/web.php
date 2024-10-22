@@ -11,7 +11,32 @@ use App\Http\Controllers\EncomendaController;
 
 Route::get('/', [HomeController::class, 'index']); // Homepage
 Route::get('/administrador', [AdministradorController::class, 'index'])->middleware('auth'); // Lista todos os utilizadores
-Route::get('produtos', [ProdutoController::class, 'index']); // Lista todos os produtos
+//Route::get('produtos', [ProdutoController::class, 'index']); // Lista todos os produtos
+
+Route::prefix('produtos')->group(function () {
+    // Listar todos os produtos
+    Route::get('/', [ProdutoController::class, 'index'])->name('produtos.index');
+
+    // Criar novo produto (GET para a view de criar)
+    Route::get('/criar', [ProdutoController::class, 'create'])->name('produtos.create');
+
+    // Mostrar um produto específico
+    Route::get('/{id}', [ProdutoController::class, 'show'])->name('produtos.show');
+
+    // Editar produto (GET para a view de editar)
+    Route::get('/{id}/editar', [ProdutoController::class, 'edit'])->name('produtos.edit');
+
+    // Armazenar novo produto
+    Route::post('/', [ProdutoController::class, 'store'])->name('produtos.store');
+
+    // Atualizar produto existente
+    Route::put('/{id}', [ProdutoController::class, 'update'])->name('produtos.update');
+
+    // Eliminar produto existente
+    Route::delete('/{id}', [ProdutoController::class, 'destroy'])->name('produtos.destroy');
+});
+
+
 Route::get('/categorias', [CategoriaController::class, 'index']); // Lista todas as categorias
 Route::get('/categorias/{id}', [CategoriaController::class, 'show']); // Mostra os produtos de uma categoria específica
 Route::get('/register', [AuthController::class, 'showRegisterForm']); // Formulário de registo
@@ -27,14 +52,14 @@ Route::put('/perfil/alterar_password', [PerfilController::class, 'alterarPasswor
 Route::post('/categorias/store', [CategoriaController::class, 'store']); // Cria uma nova categoria
 Route::post('/categorias/{id}/update', [CategoriaController::class, 'update']); // Edita uma categoria
 Route::delete('/categorias/{id}/destroy', [CategoriaController::class, 'destroy']); // Elimina uma categoria
-Route::get('/montra', [MontraController::class, 'montra'])->name('montra.index')->middleware('auth'); //mostra a montra de categorias
+Route::get('/montra', [MontraController::class, 'montra'])->name('montra.index'); //mostra a montra de categorias
 Route::prefix('administrador')->name('administrador.')->group(function() {
     // Rota para a listagem de encomendas
-    Route::get('/encomendas', [EncomendaController::class, 'index'])->name('encomendas.index');
+    Route::get('/encomendas', [EncomendaController::class, 'index'])->name('encomendas.index')->middleware('auth');
     // Rota para editar uma encomenda específica
-    Route::get('/encomendas/{id}/edit', [EncomendaController::class, 'edit'])->name('encomendas.edit');
+    Route::get('/encomendas/{id}/edit', [EncomendaController::class, 'edit'])->name('encomendas.edit')->middleware('auth');
     // Rota para atualizar uma encomenda específica
-    Route::put('/encomendas/{id}', [EncomendaController::class, 'update'])->name('encomendas.update');
+    Route::put('/encomendas/{id}', [EncomendaController::class, 'update'])->name('encomendas.update')->middleware('auth');
 });
 Route::get('/perfil', function () {
     return view('perfil');

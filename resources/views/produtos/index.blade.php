@@ -2,6 +2,15 @@
 @section('title', 'Produtos')
 @section('content')
     <h1 class="text-center">Produtos Disponíveis</h1>
+    
+    @auth
+        @if(Auth::user()->admin)  
+            <div class="mb-4 text-end">
+                <button class="btn btn-info" onclick="window.location.href='{{ route('produtos.store') }}'">Criar Produto</button>
+            </div>
+        @endif
+    @endauth
+
     <h2>Produtos</h2>
     <div class="row">
         @foreach($produtos as $produto)
