@@ -53,8 +53,3 @@ Route::post('/carrinho/adicionar', [CarrinhoController::class, 'adicionar'])->mi
 Route::post('/carrinho/actualizar', [CarrinhoController::class, 'actualizar'])->middleware('auth'); // Actualizar
 Route::post('/carrinho/remover', [CarrinhoController::class, 'remover'])->middleware('auth'); // Remover
 Route::post('/carrinho/encomendar', [CarrinhoController::class, 'encomendar'])->middleware('auth'); // Encomendar
-
-// Get CSRF Token
-// Route::get('/csrf-token', function () {
-//     return response()->json(['token' => csrf_token()]);
-// });
