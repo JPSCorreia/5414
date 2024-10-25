@@ -9,6 +9,14 @@ use Illuminate\Support\Facades\Hash;
 
 class PerfilController extends Controller
 {
+
+    public function index()
+    {
+        $utilizador = Auth::user();
+        $encomendas = $utilizador->encomendas()->with('produto')->orderBy('criado_em', 'desc')->get();
+        return view('perfil.index', compact('utilizador', 'encomendas'));
+    }
+
     public function actualizar(Request $request)
     {
         // Validação dos dados (exceto o email)

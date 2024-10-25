@@ -35,4 +35,9 @@ class Utilizador extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function encomendas()
+    {
+        return $this->hasMany(Encomenda::class);
+    }
 }

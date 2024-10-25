@@ -1,0 +1,37 @@
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  border: 1px solid black;
+  padding: 8px;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+.utilizador-linha {
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+}
+
+.categoria-linha {
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+}
+
+.produto-linha {
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+}
+
+.encomenda-linha {
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+}

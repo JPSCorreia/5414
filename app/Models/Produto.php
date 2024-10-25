@@ -2,6 +2,8 @@
 namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\ImagensProduto;
+
 class Produto extends Model
 {
     use HasFactory;
@@ -25,7 +27,7 @@ class Produto extends Model
     // Relacionamento com imagens (Um produto tem muitas imagens)
     public function imagens()
     {
-        return $this->hasMany(Imagem::class, 'produto_id');
+        return $this->hasMany(ImagensProduto::class, 'produto_id');
     }
     //Este método indica que um produto pode pertencer a várias encomendas.
     public function encomendas()

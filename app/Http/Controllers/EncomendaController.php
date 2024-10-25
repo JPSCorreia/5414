@@ -2,52 +2,77 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Models\Encomenda;
+use App\Models\Utilizador;
 use App\Models\Produto;
-use App\Models\EncomendaProduto;
-
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class EncomendaController extends Controller
 {
+    // Listar encomendas na página de administrador
     public function index()
     {
-        $encomendas = Encomenda::with('Utilizador')->get(); // Obtém todas as encomendas
-        return view('administrador.index_encomenda', compact('encomendas')); // Supondo que esta seja a view para listar encomendas
+        $encomendas = Encomenda::with('utilizador', 'produto')->get();
+        $utilizadores = Utilizador::all();
+        $produtos = Produto::all();
+
+        return view('administrador.index', compact('encomendas', 'utilizadores', 'produtos'));
     }
 
-    // Função para editar uma encomenda específica
-    public function edit($id)
+    // Criar nova encomenda
+    public function store(Request $request)
     {
-        $encomenda = Encomenda::with('Utilizador')->findOrFail($id); // Procura a encomenda pelo ID
-        $produtos = Produto::all(); // Carrega todos os produtos disponíveis
+        $request->validate([
+            'utilizador_id' => 'required|exists:utilizadores,id',
+            'produto_id' => 'required|exists:produtos,id',
+            'quantidade' => 'required|integer|min:1',
+        ]);
 
-        return view('administrador.edit_encomenda', compact('encomenda', 'produtos'));
+        $encomenda = Encomenda::create([
+            'utilizador_id' => $request->utilizador_id,
+            'produto_id' => $request->produto_id,
+            'quantidade' => $request->quantidade,
+        ]);
+
+        return response()->json(['success' => true, 'encomenda' => $encomenda], 201);
     }
 
-    /**
-     * Atualiza uma encomenda existente.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    // Atualizar encomenda
     public function update(Request $request, $id)
-{
-    $encomendaProduto = EncomendaProduto::findOrFail($id);
-    
-    // Aqui, deves validar os dados do request antes de atualizar a encomenda_produto.
-    $request->validate([
-        'produto_id' => 'required|exists:produtos,id',
-        'quantidade' => 'required|integer|min:1',
-    ]);
+    {
+        $encomenda = Encomenda::find($id);
 
-    // Atualiza os dados da encomenda_produto conforme necessário
-    $encomendaProduto->produto_id = $request->input('produto_id');
-    $encomendaProduto->quantidade = $request->input('quantidade');
-    $encomendaProduto->save(); // Salva as alterações
+        if (!$encomenda) {
+            return response()->json(['success' => false, 'message' => 'Encomenda não encontrada.'], 404);
+        }
 
-    return redirect()->route('administrador.encomendas.index')->with('success', 'Produto da encomenda atualizado com sucesso');
-}
+        $request->validate([
+            'utilizador_id' => 'required|exists:utilizadores,id',
+            'produto_id' => 'required|exists:produtos,id',
+            'quantidade' => 'required|integer|min:1',
+        ]);
+
+        $encomenda->update([
+            'utilizador_id' => $request->utilizador_id,
+            'produto_id' => $request->produto_id,
+            'quantidade' => $request->quantidade,
+        ]);
+
+        return response()->json(['success' => true, 'encomenda' => $encomenda]);
+    }
+
+    // Apagar encomenda
+    public function destroy($id)
+    {
+        $encomenda = Encomenda::find($id);
+
+        if (!$encomenda) {
+            return response()->json(['success' => false, 'message' => 'Encomenda não encontrada.'], 404);
+        }
+
+        $encomenda->delete();
+
+        return response()->json(['success' => true]);
+    }
 }

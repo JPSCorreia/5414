@@ -24,7 +24,7 @@ CREATE TABLE produtos (
     titulo VARCHAR(255) NOT NULL,
     descricao TEXT NOT NULL,
     preco DECIMAL(10, 2) NOT NULL,
-    categoria_id INT,
+    categoria_id INTEGER,
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     actualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (categoria_id) REFERENCES categorias(id)
@@ -32,8 +32,20 @@ CREATE TABLE produtos (
 
 CREATE TABLE imagens_produtos (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    produto_id INT,
+    produto_id INTEGER,
     URL_imagem VARCHAR(255) NOT NULL,
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    actualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (produto_id) REFERENCES produtos(id)
+);
+
+CREATE TABLE encomendas (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    utilizador_id INTEGER,
+    produto_id INTEGER,
+    quantidade INTEGER NOT NULL,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    actualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (utilizador_id) REFERENCES utilizadores(id),
     FOREIGN KEY (produto_id) REFERENCES produtos(id)
 );

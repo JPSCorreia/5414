@@ -6,64 +6,54 @@ use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdministradorController;
 use App\Http\Controllers\PerfilController;
-use App\Http\Controllers\MontraController;
-use App\Http\Controllers\EncomendaController;
+use App\Http\Controllers\UtilizadorController;
+use App\Http\Controllers\CarrinhoController;
 
-Route::get('/', [HomeController::class, 'index']); // Homepage
-Route::get('/administrador', [AdministradorController::class, 'index'])->middleware('auth'); // Lista todos os utilizadores
-//Route::get('produtos', [ProdutoController::class, 'index']); // Lista todos os produtos
+// Home
+Route::get('/', [HomeController::class, 'index']); // Página inicial
 
-Route::prefix('produtos')->group(function () {
-    // Listar todos os produtos
-    Route::get('/', [ProdutoController::class, 'index'])->name('produtos.index');
+// Produtos
+Route::get('produtos', [ProdutoController::class, 'index']); // Página de produtos
+Route::get('produtos/{id}', [ProdutoController::class, 'show']); // Página de um produto com id especifico
+Route::post('/administrador/produtos/store', [ProdutoController::class, 'store'])->name('produtos.store'); // Cria um novo produto
+Route::put('/administrador/produtos/{id}/update', [ProdutoController::class, 'update']); // Editar um produto
 
-    // Criar novo produto (GET para a view de criar)
-    Route::get('/criar', [ProdutoController::class, 'create'])->name('produtos.create');
+Route::delete('/administrador/produtos/{id}/destroy', [ProdutoController::class, 'destroy']); // Eliminar um produto
 
-    // Mostrar um produto específico
-    Route::get('/{id}', [ProdutoController::class, 'show'])->name('produtos.show');
+// Administrador
+Route::get('/administrador', [AdministradorController::class, 'index'])->middleware('auth'); // Página de administrador
 
-    // Editar produto (GET para a view de editar)
-    Route::get('/{id}/editar', [ProdutoController::class, 'edit'])->name('produtos.edit');
+// Categorias
+Route::get('/categorias', [CategoriaController::class, 'index']); // Página de categorias
+Route::get('/categorias/{id}', [CategoriaController::class, 'show']); // Página de uma categoria com id especifico
+Route::post('/administrador/categorias/store', [CategoriaController::class, 'store']); // Cria uma nova categoria
+Route::put('/administrador/categorias/{id}/update', [CategoriaController::class, 'update']); // Editar categoria
+Route::delete('/administrador/categorias/{id}/destroy', [CategoriaController::class, 'destroy']); // Eliminar categoria
 
-    // Armazenar novo produto
-    Route::post('/', [ProdutoController::class, 'store'])->name('produtos.store');
+// Autenticação
+Route::get('/register', [AuthController::class, 'showRegisterForm']); // Pagina de registo de utilizador
+Route::get('/login', [AuthController::class, 'showLoginForm']); // Página de login
+Route::post('/register', [AuthController::class, 'register']); // Criar novo utilizador
+Route::post('/login', [AuthController::class, 'login']); // Fazer login
+Route::post('/logout', [AuthController::class, 'logout']); // Fazer logout
 
-    // Atualizar produto existente
-    Route::put('/{id}', [ProdutoController::class, 'update'])->name('produtos.update');
+// Utilizadores
+Route::post('administrador/utilizadores/store', [UtilizadorController::class, 'store'])->middleware('auth'); // Cria um novo utilizador
+Route::put('/administrador/utilizadores/{id}/update', [UtilizadorController::class, 'update'])->middleware('auth'); // Editar utilizador
+Route::delete('/administrador/utilizadores/{id}/destroy', [UtilizadorController::class, 'destroy'])->middleware('auth'); // Elimina um utilizador
 
-    // Eliminar produto existente
-    Route::delete('/{id}', [ProdutoController::class, 'destroy'])->name('produtos.destroy');
-});
-
-
-Route::get('/categorias', [CategoriaController::class, 'index']); // Lista todas as categorias
-Route::get('/categorias/{id}', [CategoriaController::class, 'show']); // Mostra os produtos de uma categoria específica
-Route::get('/register', [AuthController::class, 'showRegisterForm']); // Formulário de registo
-Route::post('/register', [AuthController::class, 'register']); // Registo
-Route::get('/login', [AuthController::class, 'showLoginForm']); // Formulário de login
-Route::post('/login', [AuthController::class, 'login']); // Login
-Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth'); // Logout
-Route::put('/utilizadores/{id}/editar', [AdministradorController::class, 'update'])->middleware('auth'); // Editar utilizador
+// Perfil
+Route::get('/perfil', [PerfilController::class, 'index'])->middleware('auth'); // Página de perfil
 Route::put('/perfil/actualizar', [PerfilController::class, 'actualizar']); // Actualizar perfil
-Route::post('/administrador/create', [AdministradorController::class, 'create']); // Cria um novo utilizador
-Route::delete('/administrador/{id}/delete', [AdministradorController::class, 'destroy']); // Elimina um utilizador
 Route::put('/perfil/alterar_password', [PerfilController::class, 'alterarPassword']); // Alterar password
-Route::post('/categorias/store', [CategoriaController::class, 'store']); // Cria uma nova categoria
-Route::post('/categorias/{id}/update', [CategoriaController::class, 'update']); // Edita uma categoria
-Route::delete('/categorias/{id}/destroy', [CategoriaController::class, 'destroy']); // Elimina uma categoria
-Route::get('/montra', [MontraController::class, 'montra'])->name('montra.index'); //mostra a montra de categorias
-Route::prefix('administrador')->name('administrador.')->group(function() {
-    // Rota para a listagem de encomendas
-    Route::get('/encomendas', [EncomendaController::class, 'index'])->name('encomendas.index')->middleware('auth');
-    // Rota para editar uma encomenda específica
-    Route::get('/encomendas/{id}/edit', [EncomendaController::class, 'edit'])->name('encomendas.edit')->middleware('auth');
-    // Rota para atualizar uma encomenda específica
-    Route::put('/encomendas/{id}', [EncomendaController::class, 'update'])->name('encomendas.update')->middleware('auth');
-});
-Route::get('/perfil', function () {
-    return view('perfil');
-})->middleware('auth');
+
+// Carrinho
+Route::get('/carrinho', [CarrinhoController::class, 'index'])->middleware('auth'); // Página de carrinho
+Route::post('/carrinho/adicionar', [CarrinhoController::class, 'adicionar'])->middleware('auth'); // Adicionar ao carrinho
+Route::post('/carrinho/actualizar', [CarrinhoController::class, 'actualizar'])->middleware('auth'); // Actualizar
+Route::post('/carrinho/remover', [CarrinhoController::class, 'remover'])->middleware('auth'); // Remover
+Route::post('/carrinho/encomendar', [CarrinhoController::class, 'encomendar'])->middleware('auth'); // Encomendar
+
 // Get CSRF Token
 // Route::get('/csrf-token', function () {
 //     return response()->json(['token' => csrf_token()]);

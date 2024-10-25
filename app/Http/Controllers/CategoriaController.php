@@ -4,31 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Models\Categoria;
 use Illuminate\Http\Request;
-
+use App\Models\Produto;
 use Illuminate\Support\Facades\Log;
 
 class CategoriaController extends Controller
 {
-    // Listar todas as categorias
+    // Página de categorias
     public function index()
     {
-
-        Log::info('A tentar encontrar todas as categorias');
-
+        // Obter categorias e produtos da base de dados
         $categorias = Categoria::all();
+        $produtos = Produto::with('imagens')->get();
 
-        Log::info('Categorias encontradas com sucesso.');
-
-        // Verify if the request expects JSON
-        if (request()->wantsJson()) {
-            Log::info('A tentar retornar as categorias como JSON');
-            return response()->json($categorias);
-        }
-
-        Log::info('A tentar retornar as categorias como HTML');
-
-        return view('categorias.index', ['categorias' => $categorias]);
+        // Passar as variáveis para a view
+        return view('categorias.index', compact('categorias', 'produtos'));
     }
+
 
     // Mostrar uma categoria específica
     public function show($id)
@@ -72,7 +63,7 @@ class CategoriaController extends Controller
     }
 
 
-    // Atualizar categoria existente
+    // Actualizar categoria existente
     public function update(Request $request, $id)
     {
         Log::info('A tentar atualizar a categoria com ID: ' . $id);
@@ -85,6 +76,12 @@ class CategoriaController extends Controller
         }
 
         Log::info('A tentar validar dados enviados no request: ', $request->all());
+
+        $request->validate([
+            'nome' => 'required|string|max:255',
+        ]);
+
+        Log::info('Dados validados com sucesso, a tentar atualizar a categoria...');
 
         $categoria->update([
             'nome' => $request->nome,
@@ -129,10 +126,5 @@ class CategoriaController extends Controller
 
         return response()->json(['message' => 'Ocorreu um erro ao eliminar a categoria'], 500);
     }
-
-
-
-
-
 
 }

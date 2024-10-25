@@ -51,112 +51,75 @@ class UtilizadorController extends Controller
         return response()->json($utilizador);
     }
 
-    // Criar novo utilizador
-    // public function store(Request $request)
-    // {
-    //     Log::info('A tentar criar um novo utilizador, a validar dados enviados no request: ', $request->all());
+    // Criar um novo utilizador a partir da página de administração
+    public function store(Request $request)
+    {
+        Log::info('A tentar criar um novo utilizador a partir da página de administração, a validar os dados enviados no request.', $request->all());
 
-    //     $request->validate([
-    //         'nome' => 'required|string|max:255',
-    //         'email' => 'required|string|email|max:255|unique:utilizadores',
-    //         'password' => 'required|string|min:8|confirmed',
-    //         'distrito' => 'required|string|max:255',
-    //         'concelho' => 'required|string|max:255',
-    //         'admin' => 'nullable|boolean'
-    //     ]);
+        // Validação dos dados
+        $request->validate([
+            'nome' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:utilizadores',
+            'password' => 'required|string|min:8',
+            'distrito' => 'required|string|max:255',
+            'concelho' => 'required|string|max:255',
+            'admin' => 'nullable|boolean'
+        ]);
 
-    //     Log::info('Dados validados com sucesso, a tentar criar novo utilizador...');
+        Log::info('Dados validados com sucesso, a tentar criar novo utilizador...');
 
-    //     $utilizador = Utilizador::create([
-    //         'nome' => $request->nome,
-    //         'email' => $request->email,
-    //         'password' => Hash::make($request->password), // Encriptar a password
-    //         'distrito' => $request->distrito,
-    //         'concelho' => $request->concelho,
-    //         'admin' => $request->has('admin') ? 1 : 0
-    //     ]);
+        // Criação do utilizador
+        $utilizador = Utilizador::create([
+            'nome' => $request->nome,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'distrito' => $request->distrito,
+            'concelho' => $request->concelho,
+            'admin' => $request->has('admin') ? 1 : 0
+        ]);
 
+        Log::info('Utilizador criado com sucesso: ' . $request->email);
 
+        // Resposta JSON para o JavaScript
+        return response()->json([
+            'success' => true,
+            'utilizador' => $utilizador
+        ], 201);
+    }
 
-    //     Log::info('Utilizador criado com sucesso: ' . $request->email);
-
-    //     if (request()->wantsJson()) {
-    //         return response()->json($utilizador, 201);
-    //     }
-
-    //     // Fazer login automaticamente após o registo
-    //     Auth::login($utilizador);
-
-    //     Log::info('Autenticado com sucesso: ' . $request->email);
-
-    //     return redirect('/perfil')->with('success', 'Registo concluído com sucesso!');
-    // }
-
-    // Atualizar utilizador existente
+    // Actualizar utilizador existente
     public function update(Request $request, $id)
     {
-        Log::info('A tentar atualizar o utilizador com ID: ' . $id);
-
         $utilizador = Utilizador::find($id);
 
         if (!$utilizador) {
-            Log::error('Utilizador com ID ' . $id . ' não encontrado');
-            return response()->json(['message' => 'Utilizador não encontrado'], 404);
+            return response()->json(['success' => false, 'message' => 'Utilizador não encontrado.'], 404);
         }
 
-        Log::info('A tentar validar dados enviados no request: ', $request->all());
-
-        $request->validate([
-            'nome' => 'required|string|max:255',
-            'password' => 'required|string|min:8',
-            'distrito' => 'required|string|max:255',
-            'concelho' => 'required|string|max:255'
+        // Atualizar os dados do utilizador com base no request
+        $utilizador->update([
+            'nome' => $request->nome,
+            'email' => $request->email,
+            'distrito' => $request->distrito,
+            'concelho' => $request->concelho,
+            'admin' => $request->admin
         ]);
 
-        Log::info('Dados validados com sucesso, a tentar actualizar...');
-
-        $utilizador->nome = $request->nome;
-        $utilizador->distrito = $request->distrito;
-        $utilizador->concelho = $request->concelho;
-
-        if ($request->filled('password')) {
-            $utilizador->password = Hash::make($request->password);
-        }
-
-        $utilizador->save();
-
-        Log::info('Utilizador atualizado com sucesso: ' . $utilizador->id);
-
-        if (request()->wantsJson()) {
-            return response()->json($utilizador, 200);
-        }
-
-        return back()->with('success', 'Utilizador atualizado com sucesso!');
+        return response()->json(['success' => true, 'message' => 'Utilizador atualizado com sucesso.', 'utilizador' => $utilizador]);
     }
 
     // Eliminar utilizador existente
     public function destroy($id)
     {
-        Log::info('A tentar procurar o utilizador para eliminar com ID: ' . $id);
-
         $utilizador = Utilizador::find($id);
 
         if (!$utilizador) {
-            Log::error('Utilizador com ID ' . $id . ' não encontrado');
-
-            return response()->json(['message' => 'Utilizador não encontrado'], 404);
+            return response()->json(['success' => false, 'message' => 'Utilizador não encontrado.'], 404);
         }
 
-        Log::info('A tentar eliminar o utilizador com ID: ' . $id);
+        $utilizador->delete();
 
-        if ($utilizador->delete()) {
-            Log::info('Utilizador eliminado com sucesso: ' . $utilizador->id);
-
-            return response()->json(['message' => 'Utilizador eliminado com sucesso'], 200);
-        }
-
-        Log::error('Ocorreu um erro ao eliminar o utilizador');
-
-        return response()->json(['message' => 'Ocorreu um erro ao eliminar o utilizador'], 500);
+        return response()->json(['success' => true, 'message' => 'Utilizador apagado com sucesso.']);
     }
+
 }

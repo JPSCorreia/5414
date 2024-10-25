@@ -3,28 +3,32 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Foundation\Auth\User;
-use Illuminate\Notifications\Notifiable;
-use App\Models\Utilizador; 
-
 
 class Encomenda extends Model
 {
-    use HasFactory, Notifiable;
+    // Define o nome da tabela associada ao modelo
+    protected $table = 'encomendas';
 
-    protected $fillable = ['user_id', 'data_encomenda'];
+    // Definir os campos que podem ser preenchidos
+    protected $fillable = [
+        'utilizador_id',
+        'produto_id',
+        'quantidade',
+    ];
 
-    // Relacionamento com o utilizador
-    public function utilizador() // Usa 'utilizador' em vez de 'user'
+    // Definir os timestamps personalizados
+    const CREATED_AT = 'criado_em';
+    const UPDATED_AT = 'actualizado_em';
+
+    // Relacionamento com utilizador (Uma encomenda pertence a um utilizador)
+    public function utilizador()
     {
-        return $this->belongsTo(Utilizador::class, 'user_id'); // Corrige aqui
+        return $this->belongsTo(Utilizador::class, 'utilizador_id');
     }
 
-    // Relacionamento com produtos (muitos para muitos)
-    public function produtos()
+    // Relacionamento com produto (Uma encomenda refere-se a um produto)
+    public function produto()
     {
-        return $this->belongsToMany(Produto::class, 'encomenda_produto')->withPivot('quantidade');
+        return $this->belongsTo(Produto::class, 'produto_id');
     }
 }
